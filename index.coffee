@@ -4,7 +4,8 @@
 
 http = require("http")
 
-PORT = 8080
+env = process.env.NODE_ENV ? 'test'
+config = require("./config.#{env}.json")
 
 server = http.createServer((req, res) ->
   res.writeHead 200,
@@ -12,6 +13,6 @@ server = http.createServer((req, res) ->
 
   res.end "Hello World\n"
 )
-server.listen PORT
+server.listen config.port
 
-console.log "Server is running at port #{PORT}"
+console.log "Server is running at port #{config.port}"
