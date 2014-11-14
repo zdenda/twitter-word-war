@@ -1,3 +1,10 @@
 {
-    "port": 8080
+    "port": 8080,
+    "word": "#twitter",
+    "twitter": {
+        "consumer_key": "get it from https://apps.twitter.com/",
+        "consumer_secret": "get it from https://apps.twitter.com/",
+        "access_token": "get it from https://apps.twitter.com/",
+        "access_token_secret": "get it from https://apps.twitter.com/"
+    }    
 }
