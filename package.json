@@ -1,0 +1,25 @@
+{
+    "name": "word-war",
+    "description": "Track mentions of keyword on Twitter",
+    "version": "0.0.1",
+    "main": "./index.coffee",
+    "author": {
+        "name": "Zdenda",
+        "email": ""
+    },
+    "keywords": ["twitter", "keyword"],
+    "licenses": {
+        "type": "none"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zdenda/twitter-word-war.git"
+    },
+    "bugs": {
+        "url": "https://github.com/zdenda/twitter-word-war/issues"
+    },
+    "engines": {
+        "node": "*",
+        "coffee-script": "*" 
+    }
+}
