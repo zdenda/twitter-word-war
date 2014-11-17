@@ -21,12 +21,19 @@ stream.on 'tweet', (tweet) ->
   ++counter
 
 server = http.createServer((req, res) ->
-  res.writeHead 200,
-    "Content-Type": "text/plain; charset=UTF-8"
+  response =
+    tweets: counter
+    start: utils.formatDate(start)
+    lastTweet: null
 
-  res.write "#{counter} tweets mentioned \"#{config.word}\" since #{utils.formatDate(start)} UTC\n\n"
-  res.write "Last tweet is from @#{lastTweet.user.screen_name}: \"#{lastTweet.text}\"" if lastTweet?
-  res.end()
+  if lastTweet?
+    response.lastTweet =
+      user: lastTweet.user.screen_name
+      text: lastTweet.text
+
+  res.writeHead 200,
+    "Content-Type": "application/json"
+  res.end JSON.stringify(response)
 )
 server.listen config.port
 
