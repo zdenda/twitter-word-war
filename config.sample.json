@@ -1,6 +1,7 @@
 {
     "port": 8080,
     "word": "#twitter",
+    "interval": 900000,
     "twitter": {
         "consumer_key": "get it from https://apps.twitter.com/",
         "consumer_secret": "get it from https://apps.twitter.com/",

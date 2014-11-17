@@ -9,6 +9,7 @@ config = require("./config.#{env}.json")
 counter = 0
 lastTweet = null
 start = new Date()
+history = {}
 
 twitter = new Twit(config.twitter)
 stream = twitter.stream('statuses/filter', { track: config.word })
@@ -19,12 +20,15 @@ stream.on 'error', (error) ->
 stream.on 'tweet', (tweet) ->
   lastTweet = tweet
   ++counter
+  interval = utils.intervalStart(config.interval) #TODO: use tweet.created_at
+  history[interval] = (history[interval] or 0) + 1
 
 server = http.createServer((req, res) ->
   response =
     tweets: counter
     start: utils.formatDate(start)
     lastTweet: null
+    history: history
 
   if lastTweet?
     response.lastTweet =
