@@ -20,7 +20,7 @@ stream.on 'error', (error) ->
 stream.on 'tweet', (tweet) ->
   lastTweet = tweet
   ++counter
-  interval = utils.intervalStart(config.interval) #TODO: use tweet.created_at
+  interval = utils.intervalStart(config.interval, utils.parseTwitterDate(tweet.created_at))
   history[interval] = (history[interval] or 0) + 1
 
 server = http.createServer((req, res) ->

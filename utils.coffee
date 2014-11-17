@@ -11,3 +11,10 @@ exports.intervalStart = (intervalLength, date) ->
   date = new Date() unless date?
   timestamp = date.getTime()
   return timestamp - (timestamp % intervalLength)
+
+###
+converts a string representing time from Twitter API to Date
+###
+exports.parseTwitterDate = (string) ->
+  #sample: Wed Aug 27 13:08:45 +0000 2008
+  return new Date(Date.parse(string.replace(/( \+)/, ' UTC$1')));
