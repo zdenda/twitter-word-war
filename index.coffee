@@ -1,12 +1,14 @@
 Twit = require("twit")
 http = require("http")
 
+utils = require("./utils")
+
 env = process.env.NODE_ENV ? 'test'
 config = require("./config.#{env}.json")
 
 counter = 0
 lastTweet = null
-start = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') 
+start = new Date()
 
 twitter = new Twit(config.twitter)
 stream = twitter.stream('statuses/filter', { track: config.word })
@@ -22,7 +24,7 @@ server = http.createServer((req, res) ->
   res.writeHead 200,
     "Content-Type": "text/plain; charset=UTF-8"
 
-  res.write "#{counter} tweets mentioned \"#{config.word}\" since #{start} UTC\n\n"
+  res.write "#{counter} tweets mentioned \"#{config.word}\" since #{utils.formatDate(start)} UTC\n\n"
   res.write "Last tweet is from @#{lastTweet.user.screen_name}: \"#{lastTweet.text}\"" if lastTweet?
   res.end()
 )
