@@ -10,9 +10,19 @@ counter = 0
 lastTweet = null
 start = new Date()
 history = {}
+words = {}
+words[word] = {"tweets": 0} for word in config.words
+
+
+# increment count of word
+incWord = (word, interval) ->
+  words[word].tweets++
+  history[interval] = {} unless history[interval]
+  history[interval][word] = (history[interval][word] or 0) + 1
+
 
 twitter = new Twit(config.twitter)
-stream = twitter.stream('statuses/filter', { track: config.word })
+stream = twitter.stream('statuses/filter', { track: config.words })
 
 stream.on 'error', (error) ->
   console.error error
@@ -21,13 +31,15 @@ stream.on 'tweet', (tweet) ->
   lastTweet = tweet
   ++counter
   interval = utils.intervalStart(config.interval, utils.parseTwitterDate(tweet.created_at))
-  history[interval] = (history[interval] or 0) + 1
+  incWord(word, interval) for word in config.words when utils.search(word, tweet.text)
+
 
 server = http.createServer((req, res) ->
   response =
     tweets: counter
     start: utils.formatDate(start)
     lastTweet: null
+    words: words
     history: history
 
   if lastTweet?
