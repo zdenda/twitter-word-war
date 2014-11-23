@@ -6,6 +6,71 @@
 </head>
 <body>
     <h1>Twitter Word War</h1>
-    <a href="data">data (JSON)</a>
+    <div id="container" style=""></div>
+    <a href="data">View JSON data</a>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//code.highcharts.com/4.0.4/highcharts.js"></script>
+    <script>
+        function requestData() {
+            $.ajax("data")
+                .done(function (data) {
+                    var chartsData = [];
+                    // get keywords and their history indexes
+                    for (var keyword in data.words) {
+                        chartsData.push({
+                            "keyword": keyword,
+                            "index": data.words[keyword]['index'],
+                            "data": []
+                        });
+                    }
+                    // get keywords values form history
+                    for (var time in data.history) {
+                        var ms = parseInt(time);
+                        for (var i = 0, len = chartsData.length; i < len; i++) {
+                            var index = chartsData[i]['index'];
+                            chartsData[i]['data'].push([ms, data.history[time][index]]);
+                        }
+                    }
+                    // update chart
+                    var addSeries = chart.series.length > 0 ? false : true;
+                    for (var i = 0, len = chartsData.length; i < len; i++) {
+                        if(addSeries) chart.addSeries({});
+                        chart.series[i].update({
+                            "name": chartsData[i]['keyword'],
+                            "data": chartsData[i]['data']
+                        });
+                    }
+                    //TODO: setTimeout(requestData, 1000);
+                })
+                .fail(function () {
+                    console.error("Data unavailable");
+                    setTimeout(requestData, 1000);
+                });
+        }
+
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container',
+                    type: 'spline',
+                    events: {
+                        load: requestData
+                    }
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Tweets'
+                    }
+                }
+            });        
+        });
+    </script>
 </body>
 </html>
