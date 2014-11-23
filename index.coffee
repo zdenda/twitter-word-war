@@ -43,12 +43,13 @@ sendIndexResponse = (res) ->
     "Content-Type": "text/html; charset=UTF-8"
   fs.createReadStream(__dirname + "/index.html").pipe(res)
 
+# HTTP server response - error 404
 sendError404Response = (res) ->
   res.writeHead 404,
     "Content-Type": "text/plain; charset=UTF-8"
   res.end("404 Not Found\n");
 
-###
+
 twitter = new Twit(config.twitter)
 stream = twitter.stream('statuses/filter', { track: config.words })
 
@@ -60,7 +61,7 @@ stream.on 'tweet', (tweet) ->
   ++counter
   interval = utils.intervalStart(config.interval, utils.parseTwitterDate(tweet.created_at))
   incWord(word, i, interval) for word,i in config.words when utils.search(word, tweet.text)
-###
+
 
 server = http.createServer((req, res) ->
   switch req.url
